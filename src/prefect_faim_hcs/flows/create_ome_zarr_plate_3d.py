@@ -3,7 +3,10 @@ from faim_hcs.Zarr import PlateLayout
 from prefect import flow
 
 from src.prefect_faim_hcs._version import version
-from src.prefect_faim_hcs.tasks.zarr import build_zarr_scaffold_task
+from src.prefect_faim_hcs.tasks.zarr import (
+    add_well_to_plate_task,
+    build_zarr_scaffold_task,
+)
 
 
 @flow(
@@ -27,5 +30,13 @@ def build_ome_zarr_plate_3d(
         order_name=order_name,
         barcode=barcode,
     )
+
+    for well in files["well"].unique():
+        add_well_to_plate_task(
+            zarr_source=plate,
+            files=files,
+            well=well,
+            channels=channels,
+        )
 
     return plate
