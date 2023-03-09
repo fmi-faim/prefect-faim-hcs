@@ -1,13 +1,14 @@
 from os.path import exists, join
 
 import mobie.metadata as mom
+from cpr.utilities.utilities import task_input_hash
 from cpr.zarr.ZarrSource import ZarrSource
 from faim_hcs.mobie import add_wells_to_project
 from mobie.validation import validate_project
 from prefect import get_run_logger, task
 
 
-@task
+@task(cache_key_fn=task_input_hash)
 def create_mobie_project(
     project_folder: str,
 ):
@@ -19,7 +20,7 @@ def create_mobie_project(
         logger.info(f"Created new MoBIE project at {project_folder}.")
 
 
-@task
+@task(cache_key_fn=task_input_hash)
 def add_mobie_dataset(
     project_folder: str,
     dataset_name: str,

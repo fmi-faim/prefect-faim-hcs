@@ -1,4 +1,5 @@
-import pandas as pd
+from cpr.csv.CSVTarget import CSVTarget
+from cpr.utilities.utilities import task_input_hash
 from cpr.zarr.ZarrSource import ZarrSource
 from faim_hcs.MetaSeriesUtils import (
     get_well_image_CYX,
@@ -58,17 +59,17 @@ def add_CZYX_image_to_zarr_group(
     )
 
 
-@task()
+@task(cache_key_fn=task_input_hash)
 def build_zarr_scaffold_task(
     root_dir: str,
-    files: pd.DataFrame,
+    files: CSVTarget,
     layout: PlateLayout,
     order_name: str,
     barcode: str,
 ):
     plate = build_zarr_scaffold(
         root_dir=root_dir,
-        files=files,
+        files=files.get_data(),
         layout=layout,
         order_name=order_name,
         barcode=barcode,
@@ -81,14 +82,16 @@ def build_zarr_scaffold_task(
     )
 
 
-@task()
+@task(cache_key_fn=task_input_hash)
 def add_well_to_plate_task(
     zarr_source: ZarrSource,
-    files: DataFrame,
+    files_proxy: CSVTarget,
     well: str,
     channels: list[str],
     write_empty_chunks: bool = True,
 ) -> ZarrSource:
+    files = files_proxy.get_data()
+
     logger = get_run_logger()
     logger.info(f"Start processing well {well}.")
 
