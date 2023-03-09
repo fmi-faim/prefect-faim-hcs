@@ -1,4 +1,5 @@
 import json
+from os import makedirs
 from os.path import dirname, exists, join
 
 from cpr.Serializer import cpr_serializer
@@ -77,13 +78,18 @@ def validate_parameters(
     run_dir = join(base_dir, group, user.name, "prefect-runs", user.run_name)
 
     parameters = {
-        "user": user.dict(),
+        "user": {
+            "name": user.name,
+            "group": group,
+            "run_name": user.run_name,
+        },
         "acquisition_dir": acquisition_dir,
         "ome_zarr": ome_zarr.dict(),
         "mobie": mobie.dict(),
         "parallelization": parallelization,
     }
 
+    makedirs(run_dir, exist_ok=True)
     with open(join(run_dir, "parameters.json"), "w") as f:
         f.write(json.dumps(parameters, indent=4))
 
