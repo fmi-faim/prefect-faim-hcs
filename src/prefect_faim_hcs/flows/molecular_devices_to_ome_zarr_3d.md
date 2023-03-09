@@ -5,6 +5,10 @@ Converts a 3D multi-channel multi-well plate acquisition into an OME-Zarr.
 Standard Molecular Devices ImageXpress acquistions can be converted. Such an acquisition can contain z-projections, single z-planes and z-stacks.
 
 ## Flow Parameters
+* `user`:
+    * `name`: Name of the user.
+    * `group`: Group name of the user.
+    * `run_name`: Name of processing run.
 * `acquisition_dir`: Path to the MD ImageXpress acquisition directory.
 * `ome_zarr`:
     * `output_dir`: Path to where the OME-Zarr is written to.
