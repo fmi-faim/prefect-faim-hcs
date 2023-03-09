@@ -12,6 +12,7 @@ def get_file_list(acquisition_dir: str, run_dir: str):
         path=join(run_dir, basename(acquisition_dir) + "_files.csv")
     )
 
-    files.set_data(parse_files(acquisition_dir=acquisition_dir))
+    df = parse_files(acquisition_dir=acquisition_dir)
+    files.set_data(df.sort_values(by=df.columns.values.tolist()))
 
     return files
