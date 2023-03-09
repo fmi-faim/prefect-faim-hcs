@@ -137,7 +137,7 @@ def molecular_devices_to_ome_zarr_3d(
 
     buffer = []
     wells = []
-    for well_id in files["well"].unique():
+    for well_id in files.get_data()["well"].unique():
         buffer.append(
             add_well_to_plate_task.submit(
                 zarr_source=plate,
