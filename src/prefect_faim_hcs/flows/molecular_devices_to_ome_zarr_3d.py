@@ -57,8 +57,9 @@ def validate_parameters(
 ):
     logger = get_run_logger()
     base_dir = LocalFileSystem.load("base-output-directory").basepath
-    if not exists(join(base_dir, user.group)):
-        logger.error(f"Group '{user.group}' does not exist in '{base_dir}'.")
+    group = user.group.value
+    if not exists(join(base_dir, group)):
+        logger.error(f"Group '{group}' does not exist in '{base_dir}'.")
 
     if not exists(acquisition_dir):
         logger.error(f"Acquisition directory '{acquisition_dir}' does not " f"exist.")
@@ -73,7 +74,7 @@ def validate_parameters(
     if parallelization < 1:
         logger.error(f"parallelization = {parallelization}. Must be >= 1.")
 
-    run_dir = join(base_dir, user.group, user.name, "prefect-runs", user.run_name)
+    run_dir = join(base_dir, group, user.name, "prefect-runs", user.run_name)
 
     parameters = {
         "user": user.dict(),
