@@ -141,7 +141,7 @@ def molecular_devices_to_ome_zarr_3d(
         buffer.append(
             add_well_to_plate_task.submit(
                 zarr_source=plate,
-                files=files,
+                files_proxy=files,
                 well=well_id,
                 channels=[f"w{i}" for i in range(ome_zarr.n_channels)],
                 write_empty_chunks=ome_zarr.write_empty_chunks,
