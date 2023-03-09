@@ -12,7 +12,7 @@ from faim_hcs.Zarr import (
     write_czyx_image_to_well,
 )
 from pandas import DataFrame
-from prefect import task
+from prefect import get_run_logger, task
 from zarr import Group
 
 
@@ -20,26 +20,42 @@ def add_CYX_image_to_zarr_group(
     group: Group,
     files: DataFrame,
     channels: list[str],
+    write_empty_chunks: bool = True,
 ):
     image, ch_hists, ch_metadata, metadata = get_well_image_CYX(
         well_files=files,
         channels=channels,
         assemble_fn=montage_grid_image_YX,
     )
-    write_cyx_image_to_well(image, ch_hists, ch_metadata, metadata, group, True)
+    write_cyx_image_to_well(
+        img=image,
+        histograms=ch_hists,
+        ch_metadata=ch_metadata,
+        general_metadata=metadata,
+        group=group,
+        write_empty_chunks=write_empty_chunks,
+    )
 
 
 def add_CZYX_image_to_zarr_group(
     group: Group,
     files: DataFrame,
     channels: list[str],
+    write_empty_chunks: bool = True,
 ):
     stack, ch_hists, ch_metadata, metadata = get_well_image_CZYX(
         well_files=files,
         channels=channels,
         assemble_fn=montage_grid_image_YX,
     )
-    write_czyx_image_to_well(stack, ch_hists, ch_metadata, metadata, group, True)
+    write_czyx_image_to_well(
+        img=stack,
+        histograms=ch_hists,
+        ch_metadata=ch_metadata,
+        general_metadata=metadata,
+        group=group,
+        write_empty_chunks=write_empty_chunks,
+    )
 
 
 @task()
@@ -71,9 +87,15 @@ def add_well_to_plate_task(
     files: DataFrame,
     well: str,
     channels: list[str],
-):
+    write_empty_chunks: bool = True,
+) -> ZarrSource:
+    logger = get_run_logger()
+    logger.info(f"Start processing well {well}.")
+
     plate = zarr_source.get_data()
-    field: Group = plate[well[0]][str(int(well[1:]))][0]
+    row = well[0]
+    col = str(int(well[1:]))
+    field: Group = plate[row][col][0]
     projections = field.create_group("projections")
 
     well_files = files[files["well"] == well]
@@ -84,6 +106,7 @@ def add_well_to_plate_task(
             group=projections,
             files=projection_files,
             channels=channels,
+            write_empty_chunks=write_empty_chunks,
         )
 
     stack_files = well_files[~well_files["z"].isnull()]
@@ -92,6 +115,12 @@ def add_well_to_plate_task(
             group=field,
             files=stack_files,
             channels=channels,
+            write_empty_chunks=write_empty_chunks,
         )
 
-    return zarr_source
+    zarr_well = ZarrSource.from_path(
+        path=zarr_source.get_path(),
+        group=f"{row}/{col}/0",
+        mode="r",
+    )
+    return zarr_well
