@@ -10,7 +10,6 @@ from prefect.filesystems import LocalFileSystem
 from prefect_shell import ShellOperation
 from pydantic import BaseModel
 
-from src.prefect_faim_hcs._version import version
 from src.prefect_faim_hcs.tasks.io import get_file_list
 from src.prefect_faim_hcs.tasks.mobie import add_mobie_dataset, create_mobie_project
 from src.prefect_faim_hcs.tasks.zarr import (
@@ -93,7 +92,6 @@ def validate_parameters(
 @flow(
     name="MolecularDevices to OME-Zarr [3D]",
     description=description,
-    version=version,
     cache_result_in_memory=False,
     persist_result=True,
     result_serializer=cpr_serializer(),
