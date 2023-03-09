@@ -18,8 +18,8 @@ class OMEZarr(BaseModel):
     output_dir: str
     order_name: str
     barcode: str
-    plate_layout: PlateLayout
-    channels: list[str] = ["w1", "w2", "w3", "w4"]
+    n_channels: int
+    plate_layout: PlateLayout = PlateLayout.I384
     write_empty_chunks: bool = True
 
 
@@ -71,7 +71,7 @@ def molecular_devices_to_ome_zarr_3d(
                 zarr_source=plate,
                 files=files,
                 well=well_id,
-                channels=ome_zarr.channels,
+                channels=[f"w{i}" for i in range(ome_zarr.n_channels)],
                 write_empty_chunks=ome_zarr.write_empty_chunks,
             )
         )

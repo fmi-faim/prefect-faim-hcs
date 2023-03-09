@@ -6,12 +6,17 @@ Standard Molecular Devices ImageXpress acquistions can be converted. Such an acq
 
 ## Flow Parameters
 * `acquisition_dir`: Path to the MD ImageXpress acquisition directory.
-* `output_dir`: Path to where the OME-Zarr is written to.
-* `order_name`: Name of the plate order.
-* `barcode`: Plate barcode.
-* `plate_layout`: Either 96-well-plate or 384-well-plate layout.
-* `channels`: List of acquired channels/wavelengths.
-* `write_empty_chunks`: Set this to `False` if you have acquired single planes alongside full z-stacks.
+* `ome_zarr`:
+    * `output_dir`: Path to where the OME-Zarr is written to.
+    * `order_name`: Name of the plate order.
+    * `barcode`: Plate barcode.
+    * `n_channels`: Number of acquired channels.
+    * `plate_layout`: Either 96-well-plate or 384-well-plate layout.
+    * `write_empty_chunks`: Set this to `False` if you have acquired single planes alongside full z-stacks.
+* `mobie`:
+    * `project_folder`: MoBIE project folder.
+    * `dataset_name`: Name of this dataset.
+    * `description`: Description of the dataset.
 * `parallelization`: How many wells are written in parallel. This number if optimized for our setup. __Do not change this.__
 
 ## Output Format
@@ -29,7 +34,7 @@ Multiple metadata fields are added to the OME-Zarr `.zattrs` files.
 `{plate_name}/{row}/{col}/0/.zattrs`:
 * `acquisition_metadata`: A dictionary with key `channels`.
     * `channels`: A list of dicitionaries for each acquired channel, with the following keys:
-        * `channel-name`: Name of the channel during acquistion
+        * `channel-name`: Name of the channel during acquisition
         * `display-color`: RGB hex-code of the display color
         * `exposure-time`
         * `exposure-time-unit`
