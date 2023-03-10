@@ -8,7 +8,7 @@ from mobie.validation import validate_project
 from prefect import get_run_logger, task
 
 
-@task(cache_key_fn=task_input_hash)
+@task(cache_key_fn=task_input_hash, refresh_cache=True)
 def create_mobie_project(
     project_folder: str,
 ):
@@ -16,11 +16,11 @@ def create_mobie_project(
     if exists(project_folder):
         logger.info(f"MoBIE project at {project_folder} already exists.")
     else:
-        mom.create_project_metadata(root=project_folder)
+        mom.project_metadata.create_project_metadata(root=project_folder)
         logger.info(f"Created new MoBIE project at {project_folder}.")
 
 
-@task(cache_key_fn=task_input_hash)
+@task(cache_key_fn=task_input_hash, refresh_cache=True)
 def add_mobie_dataset(
     project_folder: str,
     dataset_name: str,
@@ -29,17 +29,17 @@ def add_mobie_dataset(
     is2d: bool,
 ):
     logger = get_run_logger()
-    mom.create_dataset_structure(
+    mom.dataset_metadata.create_dataset_structure(
         root=project_folder,
         dataset_name=dataset_name,
         file_formats=["ome.zarr"],
     )
-    mom.create_dataset_metadata(
+    mom.dataset_metadata.create_dataset_metadata(
         dataset_folder=join(project_folder, dataset_name),
         description=description,
         is2d=is2d,
     )
-    mom.add_dataset(
+    mom.project_metadata.add_dataset(
         root=project_folder,
         dataset_name=dataset_name,
         is_default=False,
