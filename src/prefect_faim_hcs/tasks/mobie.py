@@ -28,6 +28,7 @@ def add_mobie_dataset(
     plate: ZarrSource,
     is2d: bool,
 ):
+    # TODO: Fix-me --> See MoBIE example in faim-hcs
     logger = get_run_logger()
     mom.dataset_metadata.create_dataset_structure(
         root=project_folder,
