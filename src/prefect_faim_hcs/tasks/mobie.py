@@ -28,7 +28,6 @@ def add_mobie_dataset(
     plate: ZarrSource,
     is2d: bool,
 ):
-    # TODO: Fix-me --> See MoBIE example in faim-hcs
     logger = get_run_logger()
     mom.dataset_metadata.create_dataset_structure(
         root=project_folder,
@@ -51,7 +50,6 @@ def add_mobie_dataset(
         dataset_folder=join(project_folder, dataset_name),
         well_group="0",
         view_name="default",
-        gap=50,
     )
 
     add_wells_to_project(
@@ -59,7 +57,7 @@ def add_mobie_dataset(
         dataset_folder=join(project_folder, dataset_name),
         well_group="0/projections",
         view_name="Projections",
-        gap=50,
+        label_suffix="_projection",
     )
 
     validate_project(root=project_folder)
