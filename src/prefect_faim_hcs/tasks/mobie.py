@@ -8,7 +8,7 @@ from mobie.validation import validate_project
 from prefect import get_run_logger, task
 
 
-@task(cache_key_fn=task_input_hash, refresh_cache=True)
+@task(cache_key_fn=task_input_hash)
 def create_mobie_project(
     project_folder: str,
 ):
@@ -20,7 +20,7 @@ def create_mobie_project(
         logger.info(f"Created new MoBIE project at {project_folder}.")
 
 
-@task(cache_key_fn=task_input_hash, refresh_cache=True)
+@task(cache_key_fn=task_input_hash)
 def add_mobie_dataset(
     project_folder: str,
     dataset_name: str,

@@ -8,9 +8,9 @@ from faim_prefect.block.choices import Choices
 from faim_prefect.parallelization.utils import wait_for_task_run
 from prefect import flow, get_run_logger
 from prefect.filesystems import LocalFileSystem
-from prefect_shell import ShellOperation
 from pydantic import BaseModel
 
+from src.prefect_faim_hcs.tasks.infrastructure import log_infrastructure
 from src.prefect_faim_hcs.tasks.io import get_file_list
 from src.prefect_faim_hcs.tasks.mobie import add_mobie_dataset, create_mobie_project
 from src.prefect_faim_hcs.tasks.zarr import (
@@ -172,11 +172,7 @@ def molecular_devices_to_ome_zarr_3d(
         is2d=False,
     )
 
-    ShellOperation(commands=[f"micromamba list > {run_dir}/environment.yaml"]).run()
-
-    ShellOperation(commands=[f"pip list > {run_dir}/requirements.txt"]).run()
-
-    ShellOperation(commands=[f"hostnamectl > {run_dir}/host.txt"]).run()
+    log_infrastructure(run_dir)
 
     return plate, join(mobie.project_folder, mobie.dataset_name)
 
