@@ -14,7 +14,7 @@ Standard Molecular Devices ImageXpress acquistions can be converted. Such an acq
     * `output_dir`: Path to where the OME-Zarr is written to.
     * `order_name`: Name of the plate order.
     * `barcode`: Plate barcode.
-    * `n_channels`: Number of acquired channels.
+    * `n_channels`: List of integers indicating the channels.
     * `plate_layout`: Either 96-well-plate or 384-well-plate layout.
     * `write_empty_chunks`: Set this to `False` if you have acquired single planes alongside full z-stacks.
 * `mobie`:
@@ -51,3 +51,8 @@ Multiple metadata fields are added to the OME-Zarr `.zattrs` files.
 
 ## Packages
 * [faim-hcs](https://github.com/fmi-faim/faim-hcs)
+* [mobie-utils-python](https://github.com/mobie/mobie-utils-python)
+* [custom-prefect-result](https://github.com/fmi-faim/custom-prefect-result)
+* [faim-prefect](https://github.com/fmi-faim/faim-prefect)
+* [prefect](https://github.com/PrefectHQ/prefect)
+* [prefect-shell](https://github.com/PrefectHQ/prefect-shell)
