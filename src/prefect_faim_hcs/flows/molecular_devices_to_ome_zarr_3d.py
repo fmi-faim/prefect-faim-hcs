@@ -5,12 +5,12 @@ from os.path import dirname, exists, join
 from cpr.Serializer import cpr_serializer
 from faim_hcs.Zarr import PlateLayout
 from faim_prefect.block.choices import Choices
+from faim_prefect.mamba import log_infrastructure
 from faim_prefect.parallelization.utils import wait_for_task_run
 from prefect import flow, get_run_logger
 from prefect.filesystems import LocalFileSystem
 from pydantic import BaseModel
 
-from src.prefect_faim_hcs.tasks.infrastructure import log_infrastructure
 from src.prefect_faim_hcs.tasks.io import get_file_list
 from src.prefect_faim_hcs.tasks.mobie import add_mobie_dataset, create_mobie_project
 from src.prefect_faim_hcs.tasks.zarr import (
