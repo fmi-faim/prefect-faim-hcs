@@ -75,7 +75,9 @@ def validate_parameters(
     if parallelization < 1:
         logger.error(f"parallelization = {parallelization}. Must be >= 1.")
 
-    run_dir = join(base_dir, group, user.name, "prefect-runs", user.run_name)
+    run_dir = join(
+        base_dir, group, user.name, "prefect-runs", user.run_name.replace(" ", "-")
+    )
 
     parameters = {
         "user": {
@@ -163,7 +165,7 @@ def molecular_devices_to_ome_zarr_3d(
     )
 
     project_folder = mobie.project_folder.rstrip("/")
-    dataset_name = mobie.dataset_name.strip("/").strip()
+    dataset_name = mobie.dataset_name.strip("/").strip().replace(" ", "-")
 
     create_mobie_project(project_folder=project_folder)
 
