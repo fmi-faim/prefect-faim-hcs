@@ -125,7 +125,7 @@ def molecular_devices_to_ome_zarr_3d(
     logger.info(f"OME-Zarr output-dir: {ome_zarr.output_dir}")
     logger.info(f"MoBIE output-dir: {mobie.project_folder}")
 
-    files = get_file_list(acquisition_dir=acquisition_dir, run_dir=run_dir)
+    files = get_file_list(acquisition_dir=acquisition_dir.rstrip("/"), run_dir=run_dir)
 
     plate = build_zarr_scaffold_task(
         root_dir=ome_zarr.output_dir,
@@ -162,11 +162,14 @@ def molecular_devices_to_ome_zarr_3d(
         result_insert_fn=lambda r: r.result(),
     )
 
-    create_mobie_project(project_folder=mobie.project_folder)
+    project_folder = mobie.project_folder.rstrip("/")
+    dataset_name = mobie.dataset_name.strip("/").strip()
+
+    create_mobie_project(project_folder=project_folder)
 
     add_mobie_dataset(
-        project_folder=mobie.project_folder,
-        dataset_name=mobie.dataset_name.strip("/").strip(),
+        project_folder=project_folder,
+        dataset_name=dataset_name,
         description=mobie.description,
         plate=plate,
         is2d=False,
@@ -174,7 +177,7 @@ def molecular_devices_to_ome_zarr_3d(
 
     log_infrastructure(run_dir)
 
-    return plate, join(mobie.project_folder, mobie.dataset_name)
+    return plate, join(project_folder, mobie.dataset_name)
 
 
 if __name__ == "__main__":
