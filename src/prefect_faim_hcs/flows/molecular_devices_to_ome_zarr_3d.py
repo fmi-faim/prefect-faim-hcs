@@ -165,8 +165,8 @@ def molecular_devices_to_ome_zarr_3d(
     create_mobie_project(project_folder=mobie.project_folder)
 
     add_mobie_dataset(
-        project_folder=mobie.project_folder,
-        dataset_name=mobie.dataset_name,
+        project_folder=mobie.project_folder.strip("/").strip(),
+        dataset_name=mobie.dataset_name.strip("/").strip(),
         description=mobie.description,
         plate=plate,
         is2d=False,
